@@ -1,0 +1,3 @@
+Hello, and welcome to my version of the Magic Mirror a program I have created from scatch.  At this time (5/12/2020) our vanilla javascript function has been updated to be hosted on a local node server, through our app.js file.  I have created a proxy on this server to pull API information to get around the CORS error! :) At this time I haven't hidden my API key so I ask that you don't abuse it, so the program can function (I only get 1000 calls a day).  I hope you enjoy!
+
+As always feel free to reach out, mitchell.trainotti@gmail.com
