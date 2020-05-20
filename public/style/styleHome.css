@@ -1,0 +1,23 @@
+/* A generic class for all text on page --> */
+		.Letters { 
+				color:white;
+		}
+			
+	/* Defining specifics ID's for texts */
+			
+			
+				
+			#headerText{
+				clear:both;
+				font-size:250%;
+			}
+
+			#introText{
+				clear:both;
+				font-size:112.5%;			
+			}
+
+			#bodyText{
+				clear:both;
+				font-size:250%;
+			}

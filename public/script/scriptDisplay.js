@@ -1,6 +1,6 @@
 async function initialize(){ //get Data and set values
-	api_url = '/weather';
-	const response = await fetch(api_url);
+	weaterAPI_url = '/weatherdata';
+	const response = await fetch(weaterAPI_url);
 	const json = await response.json();
 
 	//Temperature text update
