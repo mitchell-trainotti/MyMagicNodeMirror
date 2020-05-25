@@ -4,6 +4,7 @@ const mongodb = require('mongodb');
 const fetch = require('node-fetch');
 
 var citySchema = new mongoose.Schema({
+ //   _id:Object,
     name:String,
     latitude: String, //N/S
     longitude: String //E/W

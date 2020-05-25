@@ -1,14 +1,15 @@
-async function initialize(){ //get Data and set values
-	weaterAPI_url = '/weatherdata';
-	const response = await fetch(weaterAPI_url);
-	const json = await response.json();
+async function initialize(){ //set values
+	json = await getJSON();
+	//Time text update
+	offset = json.offset; //offset indicates the offset in time from London
+	document.getElementById('Time_Text').innerHTML = getTime(offset);
+
 
 	//Temperature text update
 	document.getElementById('Temperature_Text').innerHTML = getTemperature(json.currently.temperature);
 
 	//Sunrise text update
-	var offset = json.offset; //offset indicates the offset in time from London
-	var sunsetSec = (json.daily.data[0].sunsetTime+offset*3600)%86400; //adding 7 hours (from London) in seconds, and then removing the day
+	var sunsetSec = (json.daily.data[0].sunsetTime+offset*3600)%86400; //adding offset hours (from London) in seconds, and then removing the day
 	var sunriseSec = (json.daily.data[0].sunriseTime+offset*3600)%86400;
 	sunTimes = getSun(sunriseSec, sunsetSec);
 	document.getElementById('Sunrise_Text').innerHTML = sunTimes[0];
@@ -37,10 +38,21 @@ async function initialize(){ //get Data and set values
 	document.getElementById('Weather_Text').innerHTML = titleCase(weather);
 	document.getElementById('Weather_Image').src = getImage(weather, sunriseSec, sunsetSec);
 
+	return offset;
+}
+
+async function getJSON(){
+	var qStr = new String(window.location.href);
+	commaLoc = qStr.indexOf(',');
+	var coordinates = new String(qStr.slice(commaLoc+1));
+	weaterAPI_url = '/weatherdata/' + coordinates;
+	const response = await fetch(weaterAPI_url);
+	const json = await response.json();
+	return json;
 }
 
 function setTime(){
-	document.getElementById('Time_Text').innerHTML = getTime();
+	document.getElementById('Time_Text').innerHTML = getTime(offset);
 
 	//Day text update
 	document.getElementById('Day_Text').innerHTML = getDay();
@@ -52,19 +64,17 @@ function getImage(weather, sunriseSec, sunsetSec){
 
 	//I updated the images in the folder to be the how the weather is descriped in the API.
 	//I simply make the path be dependant on the description.
-	var path = "staticFiles/assets/"+weather+".png";
+	var path = "/staticFiles/assets/"+weather+".png";
 	
 	//We then must calculate the current time and see if it is past sunset time and sunrise time.
 	var today = new Date();
-	var hour = today.getHours();
-	var minutes = today.getMinutes();
-	var time = hour*3600 + minutes*60;
+	var msTime = today.getTime();
 	
 	//If our time is after sunset or before sunrise that means the sun is not out and our images
 	//should contain the moon instead of the sun.  In the images file each weather condition has 2 files, one for day time
 	//and one for night time.
-	if(time>sunsetSec || time<sunriseSec){
-		path = "staticFiles/assets/"+weather+" Night.png";
+	if(msTime>sunsetSec || msTime<sunriseSec){
+		path = "/staticFiles/assets/"+weather+" Night.png";
 	}
 	
 	//We return the path so we can update our image.
@@ -232,20 +242,25 @@ function getSun(sunriseSec, sunsetSec){
 	return [sunriseText, sunsetText];
 }
 
-function getTime(){
+function getTime(offset){
 	var today = new Date();
-	var hour = today.getHours();
-	var minute = today.getMinutes();
-			if (hour>=12){					//Adding endings
-					suffix = "P.M.";}
-			else{
-					suffix = "A.M.";}
-						
-	minute = addZero(minute);		//Call addZero function, to add a zero in front of 1 digit times for formatting purposes
-	hour = removeMilitary(hour);	//Call removeMilitary Function
-				
-	var fullTime = hour + ":" + minute + " " + suffix;	//Combine hour minute and the suffix
+	var msTime = today.getTime();
+    minutes = Math.floor((msTime / (1000 * 60)) % 60);
+    hours = Math.floor((msTime / (1000 * 60 * 60)) % 24) + offset;
+	var suffix = 'P.M.';
+  if(hours<0){
+	  hours = hours +24;
+  }
 
+  if (hours < 12){
+	  suffix = 'A.M.'
+  }
+
+  hours = removeMilitary(hours);
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+  var fullTime = hours + ":" + minutes + " " + suffix;
 	return fullTime;
 }
 
@@ -273,7 +288,8 @@ function getTemperature(temp){
 return Temperature;
 }
 
-setTime();
+var offset = 0;
 initialize();
+setTime();
 setInterval(setTime, 5000);
 setInterval(initialize, 60000*15);

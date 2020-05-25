@@ -3,8 +3,9 @@ const app = express();
 const favicon = require('serve-favicon');
 const path = require('path');
 require('dotenv').config();
-app.use(require('./routes'));
 app.set('view engine', 'ejs');
+
+app.use(require('./routes'));
 
 app.use(favicon(__dirname+'/public/favicon.ico'));
 
