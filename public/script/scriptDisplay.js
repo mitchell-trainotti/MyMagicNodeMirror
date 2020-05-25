@@ -2,8 +2,6 @@ async function initialize(){ //set values
 	json = await getJSON();
 	//Time text update
 	offset = json.offset; //offset indicates the offset in time from London
-	document.getElementById('Time_Text').innerHTML = getTime(offset);
-
 
 	//Temperature text update
 	document.getElementById('Temperature_Text').innerHTML = getTemperature(json.currently.temperature);
@@ -34,11 +32,13 @@ async function initialize(){ //set values
 	//Update Summary text
 	document.getElementById('Daily_Summary_Text').innerHTML = json.daily.data[0].summary;
 
+	//Update Weather text
 	var weather = json.currently.summary;
 	document.getElementById('Weather_Text').innerHTML = titleCase(weather);
-	document.getElementById('Weather_Image').src = getImage(weather, sunriseSec, sunsetSec);
 
-	return offset;
+	//Update Image
+	var imgIcon = json.currently.icon;
+	document.getElementById('Weather_Image').src = getImage(imgIcon);
 }
 
 async function getJSON(){
@@ -60,22 +60,11 @@ function setTime(){
 	document.getElementById('Date_Text').innerHTML = getDate();
 }
 
-function getImage(weather, sunriseSec, sunsetSec){
+function getImage(imgIcon){
 
 	//I updated the images in the folder to be the how the weather is descriped in the API.
 	//I simply make the path be dependant on the description.
-	var path = "/staticFiles/assets/"+weather+".png";
-	
-	//We then must calculate the current time and see if it is past sunset time and sunrise time.
-	var today = new Date();
-	var msTime = today.getTime();
-	
-	//If our time is after sunset or before sunrise that means the sun is not out and our images
-	//should contain the moon instead of the sun.  In the images file each weather condition has 2 files, one for day time
-	//and one for night time.
-	if(msTime>sunsetSec || msTime<sunriseSec){
-		path = "/staticFiles/assets/"+weather+" Night.png";
-	}
+	var path = "/staticFiles/assets/"+imgIcon+".png";
 	
 	//We return the path so we can update our image.
 	return path;
@@ -293,3 +282,9 @@ initialize();
 setTime();
 setInterval(setTime, 5000);
 setInterval(initialize, 60000*15);
+
+
+document.getElementById('submit1').onclick = function(){
+	displayURL ="/";
+	location.href = displayURL;
+};

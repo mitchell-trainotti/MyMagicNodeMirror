@@ -71,3 +71,8 @@
 				clear:both;
 				font-size:150%
 			}
+
+			#Submit_Button{
+				float:right;
+				clear:both;
+			}
