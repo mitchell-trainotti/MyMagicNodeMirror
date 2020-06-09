@@ -14,10 +14,32 @@
 
 			#introText{
 				clear:both;
-				font-size:112.5%;			
+				font-size:125%;			
 			}
 
 			#bodyText{
 				clear:both;
-				font-size:250%;
+				font-size:112.5%;
+			}
+
+			#form{
+				position: relative;
+				margin-top: -218px;			
+			}
+
+			#formIntroText{
+				font-size:125%;
+				float: right;
+				clear: right;
+				text-align: right;
+				width: 300px;
+			}
+
+			#formText{
+				font-size:112.5%;
+				float: right;
+				clear: right;
+				width: 300px;
+				text-align: right;
+
 			}

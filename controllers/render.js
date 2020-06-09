@@ -8,7 +8,11 @@ indexDisplayPath = path.join(__dirname, '/../public/view/indexDisplay.ejs');
 
 exports.renderHome = (req, res)=>{
     res.render(indexHomePath); 
-    console.log("Base Requests: /" + req.url);
+}
+
+exports.monitorRequests = (req, res, next)=>{
+    console.log("Base Requests: " + req.url);
+    next();
 }
 
 

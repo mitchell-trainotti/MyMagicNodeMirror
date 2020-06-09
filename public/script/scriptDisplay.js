@@ -246,7 +246,6 @@ function getTime(offset){
   }
 
   hours = removeMilitary(hours);
-  hours = (hours < 10) ? "0" + hours : hours;
   minutes = (minutes < 10) ? "0" + minutes : minutes;
 
   var fullTime = hours + ":" + minutes + " " + suffix;

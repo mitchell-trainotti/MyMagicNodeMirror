@@ -6,6 +6,7 @@ require('dotenv').config();
 app.set('view engine', 'ejs');
 
 app.use(require('./routes'));
+app.post(require('./routes'));
 
 app.use(favicon(__dirname+'/public/favicon.ico'));
 
