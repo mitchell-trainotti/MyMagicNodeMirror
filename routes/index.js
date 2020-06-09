@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const cityController = require(__dirname + '/../controllers/city');
+const cityController = require('../controllers/city');
 const renderController = require(__dirname + '/../controllers/render');
 const weatherController = require(__dirname + '/../controllers/weather');
 
