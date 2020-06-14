@@ -1,6 +1,6 @@
 <html>
 <head>
-	<link href="staticFiles/style/styleDisplay.css" type="text/css" rel="stylesheet" /> 
+	<link href="/staticFiles/style/styleDisplay.css" type="text/css" rel="stylesheet" /> 
 	
 	<title> My Mirror Page </title>	 <!--  Define the parameters for each text block-->
 	
@@ -10,13 +10,15 @@
 <body style = "background-color:black;"> <!--Background color of black-->
 <!-- Below is to help with spacing and where we define our objects-->
 
-<!--The City is Hardcoded, this is because when we change cities we must update the code anyway to adjust the API call.  This will simply be another reminder to update the code -->
+<!-- adding cover to hide our elements until they are loaded. -->
+	<div id="cover"></div>
+
 	<div id='City_Text' class="Letters">
-		<p> San Francisco </p>
+		<p>City Text</p>
 	</div>
 	
 	<div class="img">
-		<img src="\staticFiles\assets\default.png" id = 'Weather_Image' width = '100' height = '100'>
+		<img src="/staticFiles/assets/default.png" id = 'Weather_Image' width = '100' height = '100'>
 	</div>
 	
 	<!--Below we create a table in order to help with spacing and allignment on the right-->
@@ -72,7 +74,7 @@
 	<div id='Rain_Chance_Text' class = "Letters">
 		<p> Rain Chance Text </p>
 	</div>
-	
+
 	<div id ='Sunrise_Text' class= "Letters">
 		<p> Sunrise Text </p>
 	</div>
@@ -81,9 +83,14 @@
 		<p> Sunset Text </p>
 	</div>
 
+	<div id='Submit_Button'>
+		<input value = "Choose your city" type = "submit" id = "submit1">
+	</div>
+
 </body>
 
-<script type="text/javascript" src="staticFiles/script/scriptDisplay.js">
+<script type="text/javascript" src="/staticFiles/script/scriptDisplay.js">
+	
 </script>
 
 </html>

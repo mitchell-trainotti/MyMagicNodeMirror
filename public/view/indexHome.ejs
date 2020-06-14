@@ -1,6 +1,6 @@
 <html>
 <head>
-	<link href="staticFiles/style/styleHome.css" type="text/css" rel="stylesheet" /> 
+	<link href="/staticFiles/style/styleHome.css" type="text/css" rel="stylesheet" /> 
 	
 	<title> My Mirror Page </title>	 <!--  Define the parameters for each text block-->
 	
@@ -15,22 +15,24 @@
 	<div id='introText' class = "Letters">
 		<p> Please select your desired city. </p>
 	</div>
-	<input type="radio" id="city1" name="city" value="CITY1">
-	<label id = city1Label for="city1" class = "Letters">CITY1</label><br>
+	<div id = 'bodyText'>
 
-	<input type="radio" id="city2" name="city" value="CITY2">
-	<label id = city2Label for="city2" class = "Letters">CITY2</label><br>
+	</div>
+	<input type = "submit" id = "submitDisplay">
 
-	<input type="radio" id="city3" name="city" value="CITY3">
-	<label id = city3Label for="city3" class = "Letters">CITY3</label><br>
-	
-	<input type="radio" id="city4" name="city" value="CITY4">
-	<label id = city4Label for="city4" class = "Letters">CITY4</label><br>
-
-	<input type="radio" id="city5" name="city" value="CITY5">
-	<label id = city5Label for="city5" class = "Letters">CITY5</label><br><br><br>
-
-	<input type = "submit" id = "submit1">
+	<div  class = "Letters" id="form">
+		<p id='formIntroText'> Input new city information to overwrite highlighted city. </p>
+		
+		<div class = "Letters" id="formText">
+		<label for="formName">Name:</label>
+		<input type="text" id="formName" name="name"><br>
+		<label for="formLatitude">Latitude:</label>
+		<input type="text" id="formLatitude" name="latitude"><br>
+		<label for="formLongitude">Longitude:</label>
+		<input type="text" id="formLongitude" name="longitude"><br><br><br>
+		<input type="submit" id="submitForm">
+		</div>
+	</div>
 </body>
 
 <script type="text/javascript" src="staticFiles/script/scriptHome.js">

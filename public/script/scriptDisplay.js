@@ -1,14 +1,14 @@
-async function initialize(){ //get Data and set values
-	weaterAPI_url = '/weatherdata';
-	const response = await fetch(weaterAPI_url);
-	const json = await response.json();
+async function initialize(){ //set values
+	json = await getJSON();
+	//Time text update
+	offset = json.offset; //offset indicates the offset in time from London
+	setTime();
 
 	//Temperature text update
 	document.getElementById('Temperature_Text').innerHTML = getTemperature(json.currently.temperature);
 
 	//Sunrise text update
-	var offset = json.offset; //offset indicates the offset in time from London
-	var sunsetSec = (json.daily.data[0].sunsetTime+offset*3600)%86400; //adding 7 hours (from London) in seconds, and then removing the day
+	var sunsetSec = (json.daily.data[0].sunsetTime+offset*3600)%86400; //adding offset hours (from London) in seconds, and then removing the day
 	var sunriseSec = (json.daily.data[0].sunriseTime+offset*3600)%86400;
 	sunTimes = getSun(sunriseSec, sunsetSec);
 	document.getElementById('Sunrise_Text').innerHTML = sunTimes[0];
@@ -33,39 +33,80 @@ async function initialize(){ //get Data and set values
 	//Update Summary text
 	document.getElementById('Daily_Summary_Text').innerHTML = json.daily.data[0].summary;
 
+	//Update Weather text
 	var weather = json.currently.summary;
 	document.getElementById('Weather_Text').innerHTML = titleCase(weather);
-	document.getElementById('Weather_Image').src = getImage(weather, sunriseSec, sunsetSec);
 
+	//Update Image
+	var imgIcon = json.currently.icon;
+	document.getElementById('Weather_Image').src = getImage(imgIcon);
+}
+
+async function getJSON(){
+	console.log("new things: " + window.location.search);
+	var options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	};
+
+	const cityurl = "http://localhost:3000/citydata";
+	// console.log("post url call " + url);
+
+	const cityresponse = await fetch(cityurl, options);
+	const cityjson = await cityresponse.json();
+	windowURL = window.location.href;
+	slashPos = windowURL.lastIndexOf("/");
+	cityName = windowURL.slice(slashPos+1);
+	cityName = cityName.replace("%20", " ");
+	console.log("slashPos in " + windowURL + " is " + slashPos);
+	console.log("city name: " + cityName);
+	
+	for (i = 0; i<cityjson.data.length; i++){
+		console.log("for loop");
+		cityCompare = cityjson.data[i].name;
+		if (cityName == cityCompare){
+			cityLat = cityjson.data[i].latitude;
+			cityLon = cityjson.data[i].longitude;
+			coordinates = cityLat + ',' + cityLon;
+			break;
+		}
+
+	}
+
+
+	var options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	};
+
+	const url = "http://localhost:3000/weatherdata/" + coordinates;
+	// console.log("post url call " + url);
+	console.log("url request: " + url);
+	const response = await fetch(url, options);
+	const json = await response.json();
+	return json;
 }
 
 function setTime(){
-	document.getElementById('Time_Text').innerHTML = getTime();
 
 	//Day text update
 	document.getElementById('Day_Text').innerHTML = getDay();
-	//Day text update
+	//Date text update
 	document.getElementById('Date_Text').innerHTML = getDate();
+	//Time text update
+	document.getElementById('Time_Text').innerHTML = getTime();
+
 }
 
-function getImage(weather, sunriseSec, sunsetSec){
+function getImage(imgIcon){
 
 	//I updated the images in the folder to be the how the weather is descriped in the API.
 	//I simply make the path be dependant on the description.
-	var path = "staticFiles/assets/"+weather+".png";
-	
-	//We then must calculate the current time and see if it is past sunset time and sunrise time.
-	var today = new Date();
-	var hour = today.getHours();
-	var minutes = today.getMinutes();
-	var time = hour*3600 + minutes*60;
-	
-	//If our time is after sunset or before sunrise that means the sun is not out and our images
-	//should contain the moon instead of the sun.  In the images file each weather condition has 2 files, one for day time
-	//and one for night time.
-	if(time>sunsetSec || time<sunriseSec){
-		path = "staticFiles/assets/"+weather+" Night.png";
-	}
+	var path = "/staticFiles/assets/"+imgIcon+".png";
 	
 	//We return the path so we can update our image.
 	return path;
@@ -234,18 +275,22 @@ function getSun(sunriseSec, sunsetSec){
 
 function getTime(){
 	var today = new Date();
-	var hour = today.getHours();
-	var minute = today.getMinutes();
-			if (hour>=12){					//Adding endings
-					suffix = "P.M.";}
-			else{
-					suffix = "A.M.";}
-						
-	minute = addZero(minute);		//Call addZero function, to add a zero in front of 1 digit times for formatting purposes
-	hour = removeMilitary(hour);	//Call removeMilitary Function
-				
-	var fullTime = hour + ":" + minute + " " + suffix;	//Combine hour minute and the suffix
+	var msTime = today.getTime();
+    minutes = Math.floor((msTime / (1000 * 60)) % 60);
+    hours = Math.floor((msTime / (1000 * 60 * 60)) % 24) + offset;
+	var suffix = 'P.M.';
+  if(hours<0){
+	  hours = hours +24;
+  }
 
+  if (hours < 12){
+	  suffix = 'A.M.'
+  }
+
+  hours = removeMilitary(hours);
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+  var fullTime = hours + ":" + minutes + " " + suffix;
 	return fullTime;
 }
 
@@ -273,7 +318,19 @@ function getTemperature(temp){
 return Temperature;
 }
 
-setTime();
+var offset = 0;
 initialize();
-setInterval(setTime, 5000);
+setInterval(setTime, 1000);
 setInterval(initialize, 60000*15);
+
+
+document.getElementById('submit1').onclick = function(){
+	displayURL ="/";
+	location.href = displayURL;
+};
+
+
+window.onload = function() {
+	console.log("window has been loaded");
+	document.getElementById('cover').hidden = true;
+};

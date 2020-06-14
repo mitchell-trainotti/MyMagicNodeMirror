@@ -1,8 +1,13 @@
-/* A generic class for all text on page --> */
+/* A generic class for all text on page */
 		.Letters { 
 				color:white;
 		}
-			
+		
+		/*defining our cover that lets us buffer things in the background */
+		#cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+
+
+
 	/* Defining specifics ID's for texts */
 			
 			#City_Text{
@@ -70,4 +75,9 @@
 				float:right;
 				clear:both;
 				font-size:150%
+			}
+
+			#Submit_Button{
+				float:right;
+				clear:both;
 			}
